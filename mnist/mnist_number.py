@@ -9,14 +9,14 @@ W = tf.Variable(tf.zeros([784,10]))
 b = tf.Variable(tf.zeros([10]))
 
 # 定义模型
-y = tf.nn.softmac(tf.matmul(x,W)+b)
+y = tf.nn.softmax(tf.matmul(x,W)+b)
 
 y_ = tf.placeholder("float", [None, 10]) #正确的打标签的输出
 cross_entropy = -tf.reduce_sum(y_*tf.log(y)) #交叉熵，损失函数
 train_step = tf.train.GradientDescentOptimizer(0.01).minimize(cross_entropy) #梯度下降算法
 
 # 初始化创建的变量并启动模型
-init = tf.initialize_all_variables()
+init = tf.global_variables_initializer()
 sess = tf.Session()
 sess.run(init)
 
