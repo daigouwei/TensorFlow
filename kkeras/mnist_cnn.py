@@ -11,6 +11,8 @@ from keras.models import Sequential
 from keras.layers import Dense, Dropout, Flatten
 from keras.layers import Conv2D, MaxPooling2D
 from keras import backend as K
+from keras.utils import plot_model
+from keras.callbacks import TensorBoard # 导入TensorBoard进行监控
 
 batch_size = 128
 num_classes = 10
@@ -57,16 +59,32 @@ model.add(Dense(128, activation='relu'))
 model.add(Dropout(0.5))
 model.add(Dense(num_classes, activation='softmax'))
 
+print(model.summary()) # 打印模型概况
+plot_model(model, to_file = 'mnist_cnn.png', show_shapes=True, show_layer_names=True) # 画出模型结构图，并保存成图片
+
 model.compile(loss=keras.losses.categorical_crossentropy,
               optimizer=keras.optimizers.Adadelta(),
               metrics=['accuracy'])
+
+# keras的TensorFlow接口
+tb = TensorBoard(log_dir='mnist_cnn_logs',
+                 histogram_freq=1,
+                 batch_size=batch_size,
+                 write_graph=True,
+                 write_grads=True,
+                 write_images=True,
+                 embeddings_freq=0,
+                 embeddings_layer_names=None,
+                 embeddings_metadata=None)
+callbacks = [tb]
 
 # verbose=1输出进度条记录
 model.fit(x_train, y_train,
           batch_size=batch_size,
           epochs=epochs,
           verbose=1,
-          validation_data=(x_test, y_test))
+          validation_data=(x_test, y_test),
+          callbacks=callbacks)
 # verbose=0不输出日志信息
 score = model.evaluate(x_test, y_test, verbose=0)
 print('Test loss:', score[0])
