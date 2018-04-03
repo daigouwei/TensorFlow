@@ -2,6 +2,7 @@
 from keras.layers import Conv2D, MaxPooling2D, Flatten
 from keras.layers import Input, LSTM, Embedding, Dense
 from keras.models import Model, Sequential
+import keras
 
 # First, let's define a vision model using a Sequential model.
 # This model will encode an image into a vector.
