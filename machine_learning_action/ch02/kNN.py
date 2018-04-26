@@ -23,7 +23,50 @@ def createDataSet():
     return group, labels
 
 
+def file2matrix(filename):
+    love_dictionary = {'largeDoses': 3, 'smallDoses': 2, 'didntLike': 1}
+    fr = open(filename)
+    arrayOLines = fr.readlines()
+    returnMat = np.zeros((len(arrayOLines), 3))
+    classLabelVector = []
+    index = 0
+    for line in arrayOLines:
+        line = line.strip()
+        listFromLine = line.split('\t')
+        returnMat[index, :] = listFromLine[0:3]
+        if (listFromLine[-1].isdigit()):
+            classLabelVector.append(int(listFromLine[-1]))
+        else:
+            classLabelVector.append(love_dictionary.get(listFromLine[-1]))
+        index += 1
+    return returnMat, classLabelVector
+
+
+def autoNorm(dataSet):
+    minVals = dataSet.min(0)
+    maxVals = dataSet.max(0)
+    ranges = maxVals - minVals
+    normDataSet = np.zeros(np.shape(dataSet))
+    m = dataSet.shape[0]
+    normDataSet = dataSet - np.tile(minVals, (m, 1))
+    normDataSet = normDataSet / np.tile(ranges, (m, 1))
+    return normDataSet, ranges, minVals
+
+
+def datingClassTest():
+    hoRatio = 0.10
+    datingDataMat, datingLabels = file2matrix('datingTestSet.txt')
+    normMat, ranges, minVals = autoNorm(datingDataMat)
+    m = normMat.shape[0]
+    numTestVecs = int(m * hoRatio)
+    errorCount = 0.0
+    for i in range(numTestVecs):
+        classifierResult = classify0(normMat[i, :], normMat[numTestVecs:m, :], datingLabels[numTestVecs:m], 3)
+        print('分类器认为是{},实际结果是{}'.format(classifierResult, datingLabels[i]))
+        if (classifierResult != datingLabels[i]):
+            errorCount += 1.0
+    print('误差率为{}'.format(errorCount / float(numTestVecs)))
+
+
 if __name__ == '__main__':
-    group, labels = createDataSet()
-    res = classify0([0, 0], group, labels, 3)
-    print(res)
+    datingClassTest();
