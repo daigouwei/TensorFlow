@@ -1,5 +1,6 @@
 import numpy as np
 import operator
+from os import listdir
 
 
 def classify0(inX, dataSet, labels, k):
@@ -68,5 +69,42 @@ def datingClassTest():
     print('误差率为{}'.format(errorCount / float(numTestVecs)))
 
 
+def img2vector(filename):
+    returnVect = np.zeros((1, 1024))
+    fr = open(filename)
+    for i in range(32):
+        lineStr = fr.readline()
+        for j in range(32):
+            returnVect[0, 32 * i + j] = int(lineStr[j])
+    return returnVect
+
+
+def handwritingClassTest():
+    hwLabels = []
+    trainingFileList = listdir('trainingDigits')
+    m = len(trainingFileList)
+    trainingMat = np.zeros((m, 1024))
+    for i in range(m):
+        fileNameStr = trainingFileList[i]
+        fileStr = fileNameStr.split('.')[0]
+        classNumStr = int(fileStr.split('_')[0])
+        hwLabels.append(classNumStr)
+        trainingMat[i, :] = img2vector('trainingDigits/{}'.format(fileNameStr))
+    testFileList = listdir('testDigits')
+    errorCount = 0.0
+    mTest = len(testFileList)
+    for i in range(mTest):
+        fileNameStr = testFileList[i]
+        fileStr = fileNameStr.split('.')[0]
+        classNumStr = int(fileStr.split('_')[0])
+        vectorUnderTest = img2vector('testDigits/{}'.format(fileNameStr))
+        classifierResult = classify0(vectorUnderTest, trainingMat, hwLabels, 3)
+        print('分类器认为是{},实际结果是{}'.format(classifierResult, classNumStr))
+        if (classifierResult != classNumStr):
+            errorCount += 1.0
+    print('误差率为{}'.format(errorCount / float(mTest)))
+
+
 if __name__ == '__main__':
-    datingClassTest();
+    # datingClassTest()
+    handwritingClassTest()
