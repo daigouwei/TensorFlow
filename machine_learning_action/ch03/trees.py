@@ -27,7 +27,7 @@ def splitDataSet(dataSet, axis, value):
     for featVec in dataSet:
         if featVec[axis] == value:
             reducedFeatVec = featVec[:axis]
-            reducedFeatVec.extend(featVec[axis:])
+            reducedFeatVec.extend(featVec[axis + 1:])  # 不理解这边把featVec[axis]剔除的意义，香农熵和类别有关，其实不去算香农熵也是一样
             retDataSet.append(reducedFeatVec)
     return retDataSet
 
@@ -50,6 +50,7 @@ def chooseBestFeatureToSplit(dataSet):
             bestInfoGain = infoGain
             bestFeature = i
     return bestFeature
+
 
 if __name__ == '__main__':
     dataSet, labels = createDataSet()
