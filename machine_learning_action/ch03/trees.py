@@ -1,4 +1,5 @@
 from math import log
+import operator
 
 
 def calcShannonEnt(dataSet):
@@ -51,7 +52,18 @@ def chooseBestFeatureToSplit(dataSet):
             bestFeature = i
     return bestFeature
 
+def majorityCnt(classList):
+    classCount = {}
+    for vote in classList:
+        if vote not in classCount.keys():
+            classCount[vote] = 0
+        classCount[vote] += 1
+    sortedClassCount = sorted(classCount.items(), key=operator.itemgetter(1), reverse = True)
+    return sortedClassCount[0][0]
+
+
 
 if __name__ == '__main__':
-    dataSet, labels = createDataSet()
-    chooseBestFeatureToSplit(dataSet)
+    # dataSet, labels = createDataSet()
+    # chooseBestFeatureToSplit(dataSet)
+    majorityCnt([1,2,3,4,5,1,3,5,1,2,1])
