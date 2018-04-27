@@ -52,18 +52,36 @@ def chooseBestFeatureToSplit(dataSet):
             bestFeature = i
     return bestFeature
 
+
 def majorityCnt(classList):
     classCount = {}
     for vote in classList:
         if vote not in classCount.keys():
             classCount[vote] = 0
         classCount[vote] += 1
-    sortedClassCount = sorted(classCount.items(), key=operator.itemgetter(1), reverse = True)
+    sortedClassCount = sorted(classCount.items(), key=operator.itemgetter(1), reverse=True)
     return sortedClassCount[0][0]
 
+
+def createTree(dataSet, labels):
+    classList = [example[-1] for example in dataSet]
+    if classList.count(classList[0]) == len(classList):  # 如果剩余样本中所有种类都一样那就结束了构建决策树了
+        return classList[0]
+    if len(dataSet[0]) == 1:  # 所以特征都做了判断，就剩下最后一个特征，但是剩下的样本分类不统一，只能根据多数胜出决定了
+        return majorityCnt(classList)
+    bestFeat = chooseBestFeatureToSplit(dataSet)
+    bestFeatLabel = labels[bestFeat]
+    myTree = {bestFeatLabel: {}}
+    del (labels[bestFeat])
+    featValues = [example[bestFeat] for example in dataSet]
+    uniqueVals = set(featValues)
+    for value in uniqueVals:
+        subLabels = labels[:]
+        myTree[bestFeatLabel][value] = createTree(splitDataSet(dataSet, bestFeat, value), subLabels)
+    return myTree
 
 
 if __name__ == '__main__':
     # dataSet, labels = createDataSet()
     # chooseBestFeatureToSplit(dataSet)
-    majorityCnt([1,2,3,4,5,1,3,5,1,2,1])
+    pass
