@@ -52,14 +52,6 @@ def kMeans(dataSet, k, distMeas=distEclud, createCent=randCent):
 
 
 if __name__ == '__main__':
-    dataMat = loadDataSet('testSet.txt')
-    dataMat1 = np.mat(dataMat)
-    min = np.min(dataMat1[:, 0])
-    max = np.max(dataMat1[:, 0])
-    randCent(dataMat1, 2)
-    res1 = dataMat1[0]
-    res2 = dataMat1[1]
-    res3 = dataMat1[0, :]
-    res4 = dataMat1[1, :]
-    res = distEclud(dataMat1[0], dataMat1[1])
+    dataMat = np.mat(loadDataSet('testSet.txt'))
+    myCentroids, clustAssing = kMeans(dataMat, 4)
     print('hello')
