@@ -1,11 +1,16 @@
 class Solution:
     def twoSum(self, nums, target):
-        len = nums.__len__()
-        for i in range(len):
-            for j in range(i+1, len):
-                if nums[i]+nums[j] == target:
-                    return [i,j]
+        d = {}
+        for index in range(len(nums)):
+            d[nums[index]] = index
+        for index1 in range(len(nums)):
+            val = target - nums[index1]
+            if val in d.keys() and index1 is not d[val]:
+                index2 = d[val]
+                return [index1, index2]
+
 
 if __name__ == '__main__':
-    s = Solution();
-    [i,j] = s.twoSum([1,2,3,4], 6)
+    s = Solution()
+    [i, j] = s.twoSum([3, 3], 6)
+    print([i, j])
