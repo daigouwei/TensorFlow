@@ -22,7 +22,7 @@ class Solution:
         return resList
 '''
 
-
+'''
 class Solution:
     def threeSum(self, nums):
         resList = []
@@ -60,8 +60,39 @@ class Solution:
                     while k > j and nums[k] == nums[k + 1]:
                         k -= 1
         return resList
+'''
 
+class Solution:
+    def threeSum(self, nums):
+        """
+        :type nums: List[int]
+        :rtype: List[List[int]]
+        """
+        ans = []
+        nums.sort()
+        for i in range(len(nums)-2):
+            if i == 0 or nums[i] > nums[i-1]:
+                left = i+1
+                right = len(nums)-1
+                if nums[i]+nums[i+1]+nums[i+2]>0:
+                        break
+                if nums[i]+nums[right]+nums[right-1]<0:
+                        continue
+                while left < right:
+                    ident = nums[left] + nums[right] + nums[i]
+                    if ident == 0:
+                        ans.append([nums[i], nums[left], nums[right]])
+                        left += 1; right -= 1
+                        while left < right and nums[left] == nums[left-1]:    # skip duplicates
+                            left += 1
+                        while left < right and nums[right] == nums[right+1]:
+                            right -= 1
+                    elif ident < 0:
+                        left += 1
+                    else:
+                        right -= 1
+        return ans
 
 if __name__ == '__main__':
-    hh = Solution().threeSum([-1, 0, 1, 2, -1, -4])
+    hh = Solution().threeSum([-1, 0, 1])
     print(hh)
