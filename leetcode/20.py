@@ -9,7 +9,7 @@ class Solution:
                 stack.append(chr)
             else:
                 stack.pop() if (chr == ')' and stack[-1] == '(') or (chr == ']' and stack[-1] == '[') or (
-                        chr == '}' or stack[-1] == '{') else stack.append(chr)
+                        chr == '}' and stack[-1] == '{') else stack.append(chr)
         return True if len(stack) == 0 else False
 
 if __name__ == '__main__':
